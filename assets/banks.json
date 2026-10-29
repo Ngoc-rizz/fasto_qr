@@ -1,0 +1,202 @@
+[
+  {
+    "name": "Ngân hàng TMCP Ngoại Thương Việt Nam",
+    "short": "Vietcombank",
+    "bin": "970436"
+  },
+  {
+    "name": "Ngân hàng TMCP Công Thương Việt Nam",
+    "short": "VietinBank",
+    "bin": "970415"
+  },
+  {
+    "name": "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam",
+    "short": "BIDV",
+    "bin": "970418"
+  },
+  {
+    "name": "Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam",
+    "short": "Agribank",
+    "bin": "970405"
+  },
+  {
+    "name": "Ngân hàng TMCP Quân Đội",
+    "short": "MB Bank",
+    "bin": "970422"
+  },
+  {
+    "name": "Ngân hàng TMCP Kỹ Thương Việt Nam",
+    "short": "Techcombank",
+    "bin": "970407"
+  },
+  {
+    "name": "Ngân hàng TMCP Á Châu",
+    "short": "ACB",
+    "bin": "970416"
+  },
+  {
+    "name": "Ngân hàng TMCP Việt Nam Thịnh Vượng",
+    "short": "VPBank",
+    "bin": "970432"
+  },
+  {
+    "name": "Ngân hàng TMCP Tiên Phong",
+    "short": "TPBank",
+    "bin": "970423"
+  },
+  {
+    "name": "Ngân hàng TMCP Sài Gòn Thương Tín",
+    "short": "Sacombank",
+    "bin": "970403"
+  },
+  {
+    "name": "Ngân hàng TMCP Phát triển TP.HCM",
+    "short": "HDBank",
+    "bin": "970437"
+  },
+  {
+    "name": "Ngân hàng TMCP Sài Gòn",
+    "short": "SCB",
+    "bin": "970429"
+  },
+  {
+    "name": "Ngân hàng TMCP Quốc Tế Việt Nam",
+    "short": "VIB",
+    "bin": "970441"
+  },
+  {
+    "name": "Ngân hàng TMCP Sài Gòn - Hà Nội",
+    "short": "SHB",
+    "bin": "970443"
+  },
+  {
+    "name": "Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam",
+    "short": "Eximbank",
+    "bin": "970431"
+  },
+  {
+    "name": "Ngân hàng TMCP Hàng Hải Việt Nam",
+    "short": "MSB",
+    "bin": "970426"
+  },
+  {
+    "name": "Ngân hàng TMCP Nam Á",
+    "short": "Nam A Bank",
+    "bin": "970428"
+  },
+  {
+    "name": "Ngân hàng TMCP Đông Á",
+    "short": "DongA Bank",
+    "bin": "970406"
+  },
+  {
+    "name": "Ngân hàng TMCP Bắc Á",
+    "short": "Bac A Bank",
+    "bin": "970409"
+  },
+  {
+    "name": "Ngân hàng TMCP An Bình",
+    "short": "ABBANK",
+    "bin": "970425"
+  },
+  {
+    "name": "Ngân hàng TMCP Phương Đông",
+    "short": "OCB",
+    "bin": "970448"
+  },
+  {
+    "name": "Ngân hàng TMCP Bưu điện Liên Việt",
+    "short": "LPBank",
+    "bin": "970449"
+  },
+  {
+    "name": "Ngân hàng TMCP Kiên Long",
+    "short": "KienLong Bank",
+    "bin": "970452"
+  },
+  {
+    "name": "Ngân hàng TMCP Việt Á",
+    "short": "VietABank",
+    "bin": "970427"
+  },
+  {
+    "name": "Ngân hàng TMCP Bản Việt",
+    "short": "BVBank",
+    "bin": "970438"
+  },
+  {
+    "name": "Ngân hàng TMCP Đại Chúng Việt Nam",
+    "short": "PVcomBank",
+    "bin": "970412"
+  },
+  {
+    "name": "Ngân hàng TMCP Sài Gòn Công Thương",
+    "short": "SaigonBank",
+    "bin": "970400"
+  },
+  {
+    "name": "Ngân hàng TMCP Quốc Dân",
+    "short": "NCB",
+    "bin": "970419"
+  },
+  {
+    "name": "Ngân hàng TMCP Việt Nam Thương Tín",
+    "short": "VietBank",
+    "bin": "970433"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV CIMB Việt Nam",
+    "short": "CIMB",
+    "bin": "422589"
+  },
+  {
+    "name": "Ngân hàng Liên doanh Việt - Nga",
+    "short": "VRB",
+    "bin": "970421"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV Woori Việt Nam",
+    "short": "Woori",
+    "bin": "970457"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV Standard Chartered Việt Nam",
+    "short": "Standard Chartered",
+    "bin": "970410"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV Public Việt Nam",
+    "short": "PBVN",
+    "bin": "970439"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV Shinhan Việt Nam",
+    "short": "Shinhan Bank",
+    "bin": "970424"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV HSBC Việt Nam",
+    "short": "HSBC",
+    "bin": "458761"
+  },
+  {
+    "name": "Ngân hàng TNHH MTV UOB Việt Nam",
+    "short": "UOB",
+    "bin": "970458"
+  },
+  {
+    "name": "Ngân hàng Chính sách Xã hội",
+    "short": "VBSP",
+    "bin": "999888"
+  },
+  {
+    "name": "Ngân hàng Phát triển Việt Nam",
+    "short": "VDB",
+    "bin": "970404"
+  },
+  {
+    "name": "Ngân hàng TMCP Xăng dầu Petrolimex",
+    "short": "PG Bank",
+    "bin": "970430"
+  }
+]
