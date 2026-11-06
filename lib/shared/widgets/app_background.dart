@@ -25,7 +25,7 @@ class AppBackground extends StatelessWidget {
           Image.asset(
             imagePath!,
             fit: fit,
-            errorBuilder: (_, __, ___) {
+            errorBuilder: (_, _, _) {
               return const ColoredBox(color: AppColors.black);
             },
           )
@@ -33,7 +33,6 @@ class AppBackground extends StatelessWidget {
           const ColoredBox(color: AppColors.black),
 
         if (overlayColor != null) ColoredBox(color: overlayColor!),
-
         child,
       ],
     );

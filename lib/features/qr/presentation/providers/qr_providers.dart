@@ -10,3 +10,11 @@ final qrRepositoryProvider = Provider<QrRepository>((ref) {
 final qrControllerProvider = AsyncNotifierProvider<QrController, List<QrModel>>(
   QrController.new,
 );
+
+final qrDetailProvider = FutureProvider.family<QrModel?, String>((
+  ref,
+  qrId,
+) async {
+  final repo = ref.watch(qrRepositoryProvider);
+  return repo.getById(qrId);
+});
