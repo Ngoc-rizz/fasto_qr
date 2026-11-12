@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fasto_qr/features/qr/controllers/qr_controller.dart';
 import 'package:fasto_qr/features/qr/data/models/qr_model.dart';
 import 'package:fasto_qr/features/qr/data/repositories/qr_repository.dart';
@@ -18,3 +20,46 @@ final qrDetailProvider = FutureProvider.family<QrModel?, String>((
   final repo = ref.watch(qrRepositoryProvider);
   return repo.getById(qrId);
 });
+
+final qrCreateProvider =
+    AsyncNotifierProvider.autoDispose<QrCreateNotifier, QrModel?>(
+      QrCreateNotifier.new,
+    );
+
+class QrCreateNotifier extends AsyncNotifier<QrModel?> {
+  @override
+  FutureOr<QrModel?> build() => null;
+
+  Future<void> create(CreateQrRequest request) async {
+    if (state.isLoading) return;
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final qr = QrModel(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        bin: request.bin,
+        bankName: request.bankName,
+        bankShortName: request.bankShortName,
+        accountNumber: request.accountNumber,
+        accountName: request.accountName,
+        amount: request.amount,
+        content: request.content,
+        background: request.background,
+      );
+
+      await ref
+          .read(qrRepositoryProvider)
+          .create(qr)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Database did not respond'),
+          );
+
+      ref.invalidate(qrControllerProvider);
+      return qr;
+    });
+  }
+
+  void reset() => state = const AsyncData(null);
+}

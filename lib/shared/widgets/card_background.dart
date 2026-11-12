@@ -6,16 +6,24 @@ class CardBackground extends StatelessWidget {
   final Widget child;
   final BorderRadius borderRadius;
   final EdgeInsetsGeometry padding;
+  final List<Color>? colors;
 
   const CardBackground({
     super.key,
     required this.child,
     this.borderRadius = const BorderRadius.all(Radius.circular(20)),
     this.padding = const EdgeInsets.all(16),
+    this.colors,
   });
 
   @override
   Widget build(BuildContext context) {
+    final gradientColors =
+        colors ??
+        [
+          AppColors.white.withValues(alpha: 0.4),
+          AppColors.white.withValues(alpha: 0.1),
+        ];
     return Container(
       width: double.infinity,
       padding: padding,
@@ -24,10 +32,7 @@ class CardBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.white.withValues(alpha: 0.4),
-            AppColors.white.withValues(alpha: 0.1),
-          ],
+          colors: gradientColors,
         ),
         border: Border.all(color: AppColors.white50, width: 1),
         boxShadow: [

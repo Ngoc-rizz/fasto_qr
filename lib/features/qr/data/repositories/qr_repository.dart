@@ -10,13 +10,15 @@ class QrRepository {
 
   Future<Database> get _db => _appDatabase.database;
 
-  Future<int> create(QrModel qr) async {
+  Future<void> create(QrModel qr) async {
     final db = await _db;
+    final map = qr.toMap();
+    final columns = map.keys.join(', ');
+    final placeholders = map.keys.map((_) => '?').join(', ');
 
-    return db.insert(
-      'qr_items',
-      qr.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.abort,
+    await db.rawInsert(
+      'INSERT OR ABORT INTO qr_items ($columns) VALUES ($placeholders)',
+      map.values.toList(),
     );
   }
 
@@ -43,20 +45,20 @@ class QrRepository {
     return QrModel.fromMap(maps.first);
   }
 
-  Future<int> update(QrModel qr) async {
+  Future<void> update(QrModel qr) async {
     final db = await _db;
+    final map = qr.toMap();
+    final sets = map.keys.map((k) => '$k = ?').join(', ');
 
-    return db.update(
-      'qr_items',
-      qr.toMap(),
-      where: 'id = ?',
-      whereArgs: [qr.id],
+    await db.rawUpdate(
+      'UPDATE qr_items SET $sets WHERE id = ?',
+      [...map.values, qr.id],
     );
   }
 
-  Future<int> delete(String id) async {
+  Future<void> delete(String id) async {
     final db = await _db;
 
-    return db.delete('qr_items', where: 'id = ?', whereArgs: [id]);
+    await db.rawDelete('DELETE FROM qr_items WHERE id = ?', [id]);
   }
 }

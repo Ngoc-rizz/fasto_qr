@@ -5,32 +5,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class QrStyleBar extends StatefulWidget {
-  const QrStyleBar({
-    super.key,
-    required this.onColorChanged,
-    required this.onImagePicked,
-    this.initialColor = _defaultColor,
-  });
+  const QrStyleBar({super.key, required this.onImagePicked});
 
-  final ValueChanged<Color> onColorChanged;
   final ValueChanged<Uint8List> onImagePicked;
-  final Color initialColor;
-  static const Color _defaultColor = Color(0xFF00A8FF);
-
-  static const List<Color> _colors = [
-    AppColors.white,
-    Color(0xFF00A8FF), // xanh dương
-    Color(0xFF00FF9D), // xanh lá
-    Color(0xFFFF9500), // cam
-  ];
 
   @override
   State<QrStyleBar> createState() => _QrStyleBarState();
 }
 
 class _QrStyleBarState extends State<QrStyleBar> {
-  late Color _selected = widget.initialColor;
-  static const int _maxBytes = 2 * 1024 * 1024; // 2MB
+  static const int _maxBytes = 2 * 1024 * 1024;
 
   Future<void> _pickImage() async {
     final file = await FilePicker.pickFile(
@@ -81,90 +65,36 @@ class _QrStyleBarState extends State<QrStyleBar> {
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: _DashedBorderPainter(
-        color: AppColors.white.withValues(alpha: 0.8),
-        radius: 16,
+        color: AppColors.white50.withValues(alpha: 0.8),
+        radius: 12,
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.45),
+      child: Material(
+        color: Colors.black.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: _pickImage,
           borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final color in QrStyleBar._colors) ...[
-                  _ColorDot(
-                    color: color,
-                    selected: color == _selected,
-                    onTap: () {
-                      setState(() => _selected = color);
-                      widget.onColorChanged(color);
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                ],
-              ],
-            ),
-            InkWell(
-              onTap: _pickImage,
-              borderRadius: BorderRadius.circular(8),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.upload_rounded,
+          child: const SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 12,
+                children: [
+                  Icon(Icons.upload_rounded, color: AppColors.white, size: 24),
+                  Text(
+                    'Upload image',
+                    style: TextStyle(
                       color: AppColors.white,
-                      size: 26,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ColorDot extends StatelessWidget {
-  const _ColorDot({
-    required this.color,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final Color color;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: selected ? AppColors.white : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.white, width: 1.5),
           ),
         ),
       ),

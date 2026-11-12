@@ -134,7 +134,7 @@ class _BankPickerSheetState extends State<BankPickerSheet> {
                               ),
                             ),
                             subtitle: Text(
-                              bank['shortName']?.toString() ?? '',
+                              bank['short']?.toString() ?? '',
                               style: const TextStyle(color: AppColors.white50),
                             ),
                             trailing: isSelected

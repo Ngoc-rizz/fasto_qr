@@ -13,7 +13,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [const QrListScreen(), const CreateScreen()];
+  late final List<Widget> _screens = [
+    const QrListScreen(),
+    CreateScreen(onCreated: () => _goToTab(0)),
+  ];
+
+  void _goToTab(int index) {
+    if (_currentIndex == index) return;
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +34,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: AppBottomNavbar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _goToTab,
       ),
     );
   }

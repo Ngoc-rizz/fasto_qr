@@ -1,3 +1,6 @@
+import 'package:fasto_qr/utils/validators.dart';
+import 'package:fasto_qr/utils/vietqr.dart';
+
 class QrModel {
   final String id;
   final int bin;
@@ -48,4 +51,35 @@ class QrModel {
       'background': background,
     };
   }
+}
+
+class CreateQrRequest {
+  const CreateQrRequest({
+    required this.bin,
+    required this.bankName,
+    required this.bankShortName,
+    required this.accountNumber,
+    required this.accountName,
+    this.amount,
+    this.content,
+    this.background,
+  });
+
+  final int bin;
+  final String bankName;
+  final String bankShortName;
+  final String accountNumber;
+  final String accountName;
+  final int? amount;
+  final String? content;
+  final String? background;
+}
+
+extension QrModelX on QrModel {
+  String get vietQrPayload => buildVietQr(
+    bin: bin.toString(),
+    accountNumber: accountNumber,
+    amount: amount,
+    note: content == null ? null : removeDiacritics(content!),
+  );
 }

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
-
 class AppBackground extends StatelessWidget {
   final Widget child;
-  final String? imagePath;
-  final BoxFit fit;
-  final Color? overlayColor;
+  final Gradient gradient;
+
+  static const defaultGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF40C4A0),
+      Color(0xFF2DBEBE),
+      Color(0xFF1E96A0),
+      Color(0xFF1E6EAA),
+      Color(0xFF195AAA),
+    ],
+  );
 
   const AppBackground({
     super.key,
     required this.child,
-    this.imagePath = 'assets/images/app_background.jpg',
-    this.fit = BoxFit.cover,
-    this.overlayColor,
+    this.gradient = defaultGradient,
   });
 
   @override
@@ -21,18 +27,7 @@ class AppBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (imagePath != null)
-          Image.asset(
-            imagePath!,
-            fit: fit,
-            errorBuilder: (_, _, _) {
-              return const ColoredBox(color: AppColors.black);
-            },
-          )
-        else
-          const ColoredBox(color: AppColors.black),
-
-        if (overlayColor != null) ColoredBox(color: overlayColor!),
+        DecoratedBox(decoration: BoxDecoration(gradient: gradient)),
         child,
       ],
     );

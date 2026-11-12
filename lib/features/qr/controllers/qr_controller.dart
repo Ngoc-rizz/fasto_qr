@@ -48,13 +48,13 @@ class QrController extends AsyncNotifier<List<QrModel>> {
       final result = await _repository.getAll();
 
       if (result.isEmpty) {
-        return mockQrList;
+        return [];
       }
 
       return result;
     } catch (error, stackTrace) {
-      print('QR database error: $error');
-      print(stackTrace);
+      // print('QR database error: $error');
+      // print(stackTrace);
 
       return mockQrList;
     }

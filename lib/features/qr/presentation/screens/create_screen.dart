@@ -1,20 +1,21 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:fasto_qr/core/constants/app_colors.dart';
+import 'package:fasto_qr/features/qr/data/models/qr_model.dart';
+import 'package:fasto_qr/features/qr/presentation/providers/qr_providers.dart';
 import 'package:fasto_qr/features/qr/presentation/widgets/app_button.dart';
 import 'package:fasto_qr/features/qr/presentation/widgets/app_input_field.dart';
 import 'package:fasto_qr/features/qr/presentation/widgets/bank_information_card.dart';
 import 'package:fasto_qr/features/qr/presentation/widgets/qr_preview_card.dart';
 import 'package:fasto_qr/shared/widgets/qr_style_bar.dart';
 import 'package:fasto_qr/utils/currency_utils.dart';
-import 'package:fasto_qr/utils/validators.dart';
-import 'package:fasto_qr/utils/vietqr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateScreen extends ConsumerStatefulWidget {
-  const CreateScreen({super.key});
+  const CreateScreen({super.key, this.onCreated});
+  final VoidCallback? onCreated;
 
   @override
   ConsumerState<CreateScreen> createState() => _CreateScreenState();
@@ -30,7 +31,6 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
 
   Color _qrColor = AppColors.white;
   Uint8List? _backgroundBytes;
-  String? _qrData;
 
   @override
   void initState() {
@@ -50,6 +50,8 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
     super.dispose();
   }
 
+  int _formGeneration = 0;
+
   void _handleBankChanged(Map<String, dynamic>? bank) {
     setState(() {
       _selectedBank = bank;
@@ -62,32 +64,57 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _generateQr() {
+  Future<void> _generateQr() async {
     FocusScope.of(context).unfocus();
 
-    final bin = _selectedBank?['bin']?.toString();
+    final bank = _selectedBank;
+    final bin = int.tryParse(bank?['bin']?.toString() ?? '');
     final account = _accountNumberController.text.trim();
-
-    if (bin == null || account.isEmpty) {
-      _showMessage('Please select a bank and enter account number');
+    final holder = _accountHolderController.text.trim();
+    if (bank == null || bin == null || account.isEmpty || holder.isEmpty) {
+      _showMessage('Please select a bank and enter account number and holder');
       return;
     }
 
     final amount = int.tryParse(_amountController.text.replaceAll('.', ''));
-    final note = removeDiacritics(_noteController.text.trim());
+    final note = _noteController.text.trim();
 
-    setState(() {
-      _qrData = buildVietQr(
-        bin: bin,
-        accountNumber: account,
-        amount: amount,
-        note: note,
-      );
-    });
+    final request = CreateQrRequest(
+      bin: bin,
+      bankName: bank['name']?.toString() ?? '',
+      bankShortName: bank['short']?.toString() ?? '',
+      accountNumber: account,
+      accountName: holder,
+      amount: (amount == null || amount <= 0) ? null : amount,
+      content: note.isEmpty ? null : note,
+      background: _backgroundBytes == null
+          ? null
+          : base64Encode(_backgroundBytes!),
+    );
+
+    await ref.read(qrCreateProvider.notifier).create(request);
+
+    if (!mounted) return;
+
+    final state = ref.read(qrCreateProvider);
+    if (!state.hasError && state.value != null) {
+      _resetForm();
+
+      widget.onCreated?.call();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<QrModel?>>(qrCreateProvider, (previous, next) {
+      if (next.hasError && !next.isLoading) {
+        debugPrint('Create QR failed: ${next.error}');
+        _showMessage('Failed to create QR. Please try again.');
+      } else if (next.value != null && previous?.value != next.value) {
+        _showMessage('QR saved');
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -122,12 +149,16 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
   }
 
   Widget _buildForm() {
+    final createState = ref.watch(qrCreateProvider);
+    final qr = createState.value;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           BankInformationCard(
+            key: ValueKey(_formGeneration),
             accountNumberController: _accountNumberController,
             accountHolderController: _accountHolderController,
             onBankChanged: _handleBankChanged,
@@ -159,27 +190,46 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                 ),
                 const SizedBox(height: 28),
                 QrStyleBar(
-                  onColorChanged: (color) => setState(() => _qrColor = color),
                   onImagePicked: (bytes) =>
-                      setState(() => _backgroundBytes = bytes as Uint8List?),
+                      setState(() => _backgroundBytes = bytes),
                 ),
-
                 const SizedBox(height: 28),
-                QrPreviewCard(
-                  data: _qrData,
-                  qrColor: _qrColor,
-                  backgroundBytes: _backgroundBytes,
+                Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: QrPreviewCard(
+                    data: qr?.vietQrPayload,
+                    qrColor: _qrColor,
+                    backgroundBytes: _backgroundBytes,
+                  ),
                 ),
-
                 const SizedBox(height: 24),
-
-                SizedBox(height: 48),
-                AppButton(label: 'Create', onPressed: _generateQr),
+                AppButton(
+                  label: 'Create',
+                  isLoading: createState.isLoading,
+                  onPressed: _generateQr,
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _resetForm() {
+    setState(() {
+      _accountNumberController.clear();
+      _accountHolderController.clear();
+      _amountController.clear();
+      _noteController.clear();
+
+      _selectedBank = null;
+      _qrColor = AppColors.white;
+      _backgroundBytes = null;
+      _formGeneration++;
+    });
+
+    // Xóa QR cũ trong provider.
+    ref.invalidate(qrCreateProvider);
   }
 }
