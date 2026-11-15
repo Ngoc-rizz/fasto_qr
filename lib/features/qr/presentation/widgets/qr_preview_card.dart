@@ -6,21 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrPreviewCard extends StatelessWidget {
-  const QrPreviewCard({
-    super.key,
-    required this.qrColor,
-    this.data, // null = chưa tạo, hiện QR mẫu
-    this.backgroundBytes,
-  });
+  const QrPreviewCard({super.key, this.data, this.backgroundBytes});
 
   final String? data;
-  final Color qrColor;
   final Uint8List? backgroundBytes;
 
   static const double _radius = 24;
 
   @override
   Widget build(BuildContext context) {
+    final isEmpty = data?.isEmpty ?? true;
     return AspectRatio(
       aspectRatio: 4 / 5,
       child: Container(
@@ -44,13 +39,8 @@ class QrPreviewCard extends StatelessWidget {
                     child: CardBackground(
                       borderRadius: BorderRadius.circular(20),
                       padding: const EdgeInsets.all(24),
-                      child: data == null
-                          ? FittedBox(
-                              child: Icon(
-                                Icons.qr_code_2_rounded,
-                                color: qrColor.withValues(alpha: 0.6),
-                              ),
-                            )
+                      child: isEmpty
+                          ? FittedBox(child: Icon(Icons.qr_code_2_rounded))
                           : QrImageView(
                               data: data!,
                               version: QrVersions.auto,
@@ -59,11 +49,11 @@ class QrPreviewCard extends StatelessWidget {
                               errorCorrectionLevel: QrErrorCorrectLevel.M,
                               eyeStyle: QrEyeStyle(
                                 eyeShape: QrEyeShape.square,
-                                color: qrColor,
+                                color: AppColors.white,
                               ),
                               dataModuleStyle: QrDataModuleStyle(
                                 dataModuleShape: QrDataModuleShape.square,
-                                color: qrColor,
+                                color: AppColors.white,
                               ),
                             ),
                     ),

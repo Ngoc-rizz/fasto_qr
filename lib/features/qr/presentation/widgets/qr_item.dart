@@ -9,6 +9,7 @@ class QrItem extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onInfoTap;
   final bool isExpanded;
+  final VoidCallback? onDelete;
 
   const QrItem({
     super.key,
@@ -16,63 +17,86 @@ class QrItem extends StatelessWidget {
     this.onTap,
     this.onInfoTap,
     this.isExpanded = false,
+    this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CardBackground(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(16),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.radio_button_checked,
-                  size: 15,
-                  color: AppColors.white,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    qr.bankShortName.toUpperCase(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
+    return Dismissible(
+      key: ValueKey(qr.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async => onDelete != null,
+      onDismissed: (_) {
+        onDelete?.call();
+      },
+      background: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.only(right: 24),
+        alignment: Alignment.centerRight,
+        decoration: BoxDecoration(
+          color: const Color(0xFFB3261E),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(
+          Icons.delete_outline_rounded,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+      child: CardBackground(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(16),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.radio_button_checked,
+                    size: 15,
+                    color: AppColors.white,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      qr.bankShortName.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: onInfoTap,
-                  child: const Padding(
-                    padding: EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.info_outline,
-                      size: 19,
-                      color: AppColors.white,
+                  GestureDetector(
+                    onTap: onInfoTap,
+                    child: const Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.info_outline,
+                        size: 19,
+                        color: AppColors.white,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          AnimatedCrossFade(
-            duration: const Duration(milliseconds: 280),
-            sizeCurve: Curves.easeInOut,
-            crossFadeState: isExpanded
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            firstChild: _buildCompactContent(),
-            secondChild: _buildExpandedContent(),
-          ),
-        ],
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 280),
+              sizeCurve: Curves.easeInOut,
+              crossFadeState: isExpanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              firstChild: _buildCompactContent(),
+              secondChild: _buildExpandedContent(),
+            ),
+          ],
+        ),
       ),
     );
   }

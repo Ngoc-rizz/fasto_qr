@@ -67,26 +67,19 @@ class _QrListScreenState extends ConsumerState<QrListScreen> {
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 10,
         children: [
+          const Icon(Icons.qr_code_2_sharp, color: AppColors.white, size: 28),
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.qr_code_2_sharp,
-                  color: AppColors.white,
-                  size: 28,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'QR CODES',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 2,
-                  ),
-                ),
-              ],
+            child: Text(
+              'QR CODES',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontSize: 23,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2,
+              ),
             ),
           ),
         ],
@@ -116,6 +109,7 @@ class _QrListScreenState extends ConsumerState<QrListScreen> {
           onInfoTap: () {
             _showDetail(context, qr);
           },
+          onDelete: () {},
         );
       },
     );

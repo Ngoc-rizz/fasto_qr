@@ -26,15 +26,16 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
   late final TextEditingController _accountHolderController;
   late final TextEditingController _amountController;
   late final TextEditingController _noteController;
+  final ScrollController _scrollController = ScrollController();
 
   Map<String, dynamic>? _selectedBank;
 
-  Color _qrColor = AppColors.white;
   Uint8List? _backgroundBytes;
 
   @override
   void initState() {
     super.initState();
+
     _accountNumberController = TextEditingController();
     _accountHolderController = TextEditingController();
     _amountController = TextEditingController();
@@ -43,6 +44,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _accountNumberController.dispose();
     _accountHolderController.dispose();
     _amountController.dispose();
@@ -104,20 +106,29 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
     }
   }
 
+  Future<void> _handleRefresh() async {
+    _resetForm();
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<QrModel?>>(qrCreateProvider, (previous, next) {
       if (next.hasError && !next.isLoading) {
-        debugPrint('Create QR failed: ${next.error}');
         _showMessage('Failed to create QR. Please try again.');
       } else if (next.value != null && previous?.value != next.value) {
         _showMessage('QR saved');
       }
     });
 
-    return Scaffold(
-      body: SafeArea(
+    return RefreshIndicator(
+      onRefresh: _handleRefresh,
+      color: AppColors.white,
+      backgroundColor: const Color(0xFF123A50),
+      child: ScrollConfiguration(
+        behavior: const MaterialScrollBehavior().copyWith(scrollbars: false),
         child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -198,7 +209,6 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                   padding: const EdgeInsets.all(32),
                   child: QrPreviewCard(
                     data: qr?.vietQrPayload,
-                    qrColor: _qrColor,
                     backgroundBytes: _backgroundBytes,
                   ),
                 ),
@@ -224,7 +234,6 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
       _noteController.clear();
 
       _selectedBank = null;
-      _qrColor = AppColors.white;
       _backgroundBytes = null;
       _formGeneration++;
     });

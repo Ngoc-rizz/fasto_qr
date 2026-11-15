@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:fasto_qr/core/constants/app_colors.dart';
 import 'package:fasto_qr/features/qr/data/models/qr_model.dart';
 import 'package:fasto_qr/features/qr/presentation/providers/qr_providers.dart';
+import 'package:fasto_qr/features/qr/presentation/screens/edit_screen.dart';
 import 'package:fasto_qr/shared/widgets/card_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,7 +40,19 @@ class DetailScreen extends ConsumerWidget {
             ),
             data: (qr) => qr == null
                 ? const Center(child: Text('QR not found'))
-                : QrDetailContent(qr: qr),
+                : QrDetailContent(
+                    qr: qr,
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => EditScreen(
+                            qrId: qr.id,
+                            onEdited: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
           SafeArea(
             child: Align(
@@ -78,12 +91,14 @@ class QrDetailContent extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         if (bytes != null)
-          Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            gaplessPlayback: true,
-            errorBuilder: (_, _, _) =>
-                const ColoredBox(color: Color(0xFF123A50)),
+          AnimatedOpacity(
+            opacity: 0.6,
+            duration: const Duration(milliseconds: 300),
+            child: Image.memory(
+              bytes,
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+            ),
           )
         else
           const ColoredBox(color: Color(0xFF123A50)),
@@ -111,7 +126,7 @@ class QrDetailContent extends StatelessWidget {
 
                       return Column(
                         mainAxisSize: MainAxisSize.min,
-                        spacing: 28,
+                        spacing: 32,
                         children: [
                           QrImageView(
                             data: _buildQrData(),

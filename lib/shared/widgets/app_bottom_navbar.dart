@@ -12,18 +12,13 @@ class AppBottomNavbar extends StatelessWidget {
     required this.onTap,
   });
 
-  static const List<IconData> _icons = [
-    Icons.layers_outlined,
-    Icons.add,
-    Icons.settings_outlined,
-  ];
+  static const List<IconData> _icons = [Icons.layers_outlined, Icons.add];
 
   static const List<String> labels = ['QR List', 'Create', 'Settings'];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       decoration: BoxDecoration(color: AppColors.black50),
       child: SafeArea(
         top: false,

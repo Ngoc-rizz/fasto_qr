@@ -26,6 +26,38 @@ final qrCreateProvider =
       QrCreateNotifier.new,
     );
 
+final qrUpdateProvider =
+    AsyncNotifierProvider.autoDispose<QrUpdateNotifier, QrModel?>(
+      QrUpdateNotifier.new,
+    );
+
+class QrUpdateNotifier extends AsyncNotifier<QrModel?> {
+  @override
+  FutureOr<QrModel?> build() => null;
+
+  Future<void> updateQr(QrModel qr) async {
+    if (state.isLoading) return;
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await ref
+          .read(qrRepositoryProvider)
+          .update(qr)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Database did not respond'),
+          );
+
+      ref.invalidate(qrControllerProvider);
+      ref.invalidate(qrDetailProvider(qr.id));
+      return qr;
+    });
+  }
+
+  void reset() => state = const AsyncData(null);
+}
+
 class QrCreateNotifier extends AsyncNotifier<QrModel?> {
   @override
   FutureOr<QrModel?> build() => null;

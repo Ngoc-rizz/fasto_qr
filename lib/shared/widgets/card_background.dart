@@ -11,7 +11,7 @@ class CardBackground extends StatelessWidget {
   const CardBackground({
     super.key,
     required this.child,
-    this.borderRadius = const BorderRadius.all(Radius.circular(20)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.padding = const EdgeInsets.all(16),
     this.colors,
   });

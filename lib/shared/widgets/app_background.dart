@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AppBackground extends StatelessWidget {
-  final Widget child;
+final Widget child;
   final Gradient gradient;
 
   static const defaultGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
     colors: [
-      Color(0xFF40C4A0),
-      Color(0xFF2DBEBE),
-      Color(0xFF1E96A0),
-      Color(0xFF1E6EAA),
-      Color(0xFF195AAA),
+      Color(0xFF000000), // Black
+      Color(0xFF1C1C1C),
+      Color(0xFF404040),
+      Color(0xFF666666),
+      Color(0xFF808080), // Gray
     ],
   );
 

@@ -12,12 +12,14 @@ class BankInformationCard extends StatefulWidget {
   final TextEditingController accountNumberController;
   final TextEditingController accountHolderController;
   final ValueChanged<Map<String, dynamic>?>? onBankChanged;
+  final Map<String, dynamic>? initialBank;
 
   const BankInformationCard({
     super.key,
     required this.accountNumberController,
     required this.accountHolderController,
     this.onBankChanged,
+    this.initialBank,
   });
 
   @override
@@ -32,6 +34,7 @@ class _BankInformationCardState extends State<BankInformationCard> {
   @override
   void initState() {
     super.initState();
+    _selectedBank = widget.initialBank;
     _banksFuture = _loadBanks();
   }
 
